@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from AI_WQ_package import check_fc_submission
-import ftplib
+import ftplib, os
 
 def retrieve_annual_training_data(year,variable,password,local_destination=None):
     '''
