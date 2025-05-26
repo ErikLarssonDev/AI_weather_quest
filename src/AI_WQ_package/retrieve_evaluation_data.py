@@ -33,17 +33,16 @@ def retrieve_land_sea_mask(password,local_destination=None):
     else:
         local_filename = f'{local_destination}/land_sea_mask_1pt5DEG.nc'
 
-    # log onto FTP session
-    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
-    remote_path = f'land_sea_mask_1pt5DEG.nc'
-    # retrieve the full year file 
-    with open(local_filename,'wb') as f:
-        session.retrbinary(f"RETR {remote_path}", f.write)
+    if not os.path.exists(local_filename):
+        session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+        remote_path = f'land_sea_mask_1pt5DEG.nc'
+        with open(local_filename, 'wb') as f:
+            session.retrbinary(f"RETR {remote_path}", f.write)
+        print(f"File '{remote_path}' has been downloaded successfully.")
+        session.quit()
+    else:
+        print(f"File '{local_filename}' already exists. Skipping download.")
 
-    print(f"File '{remote_path}' has been downloaded to successfully.")
-
-    session.quit()
-    # downloaded single climatological file #### 
     # open file using xarray.
     # when opening, drop the time coordinate from the xarray.
     land_sea_mask = xr.open_dataarray(local_filename).squeeze().reset_coords('time',drop=True)
@@ -78,20 +77,20 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     else:
         local_filename = f'{local_destination}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
 
-    # log onto FTP session
-    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) 
-    if variable == 'tas' or variable == 'mslp':
-        remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
-    elif variable == 'pr':
-        remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_WEEKLYSUM_quintiles_{date}.nc'
-    # retrieve the full year file 
-    with open(local_filename,'wb') as f:
-        session.retrbinary(f"RETR {remote_path}", f.write)
-  
-    print(f"File '{remote_path}' has been downloaded to successfully.")
+    if not os.path.exists(local_filename):
+        session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) 
+        if variable == 'tas' or variable == 'mslp':
+            remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        elif variable == 'pr':
+            remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_WEEKLYSUM_quintiles_{date}.nc'
+        # retrieve the full year file 
+        with open(local_filename, 'wb') as f:
+            session.retrbinary(f"RETR {remote_path}", f.write)
+        print(f"File '{remote_path}' has been downloaded successfully.")
+        session.quit()
+    else:
+        print(f"File '{local_filename}' already exists. Skipping download.")
 
-    session.quit()
-    # downloaded single climatological file #### 
     # open file using xarray.
     single_day_clim = xr.open_dataarray(local_filename).squeeze()
     try: 
@@ -129,20 +128,20 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
         else:
             local_filename = f'{local_destination}/{variable}_obs_WEEKLYSUM_{date}.nc'
 
-    # log onto FTP session
-    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
-    if variable == 'tas' or variable == 'mslp':
-        remote_path = f'/observations/{date}/{variable}_obs_WEEKLYMEAN_{date}.nc'
-    elif variable == 'pr':
-        remote_path = f'/observations/{date}/{variable}_obs_WEEKLYSUM_{date}.nc'
-    
-    # retrieve the full year file 
-    with open(local_filename,'wb') as f:
-        session.retrbinary(f"RETR {remote_path}", f.write)
+    if not os.path.exists(local_filename):
+        session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+        if variable == 'tas' or variable == 'mslp':
+            remote_path = f'/observations/{date}/{variable}_obs_WEEKLYMEAN_{date}.nc'
+        elif variable == 'pr':
+            remote_path = f'/observations/{date}/{variable}_obs_WEEKLYSUM_{date}.nc'
+        # retrieve the full year file 
+        with open(local_filename, 'wb') as f:
+            session.retrbinary(f"RETR {remote_path}", f.write)
+        print(f"File '{remote_path}' has been downloaded successfully.")
+        session.quit()
+    else:
+        print(f"File '{local_filename}' already exists. Skipping download.")
 
-    print(f"File '{remote_path}' has been downloaded to successfully.")
-
-    session.quit()
     # open file using xarray. # removes time bounds
     try:
         weekly_obs = xr.open_dataset(local_filename).squeeze().drop_dims('bnds').drop_vars('time_bnds',errors='ignore').to_array().squeeze()
@@ -157,17 +156,19 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
 
 def retrieve_all_period_fcdates(fc_init_date,password):
     # get csv file from AI Weather Quest site.
-    # log onto FTP session and download .csv file
-    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+
     local_filename = f'competition_dates_may23_to_may27.csv'
-    remote_path = f'competition_dates_may23_to_may27.csv'
-    # retrieve the full year file 
-    with open(local_filename,'wb') as f:
-        session.retrbinary(f"RETR {remote_path}", f.write)
-
-    print(f"File '{remote_path}' has been downloaded to successfully.")
-
-    session.quit()
+    if not os.path.exists(local_filename):
+        # log onto FTP session and download .csv file
+        session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+        remote_path = f'competition_dates_may23_to_may27.csv'
+        # retrieve the full year file 
+        with open(local_filename, 'wb') as f:
+            session.retrbinary(f"RETR {remote_path}", f.write)
+        print(f"File '{remote_path}' has been downloaded successfully.")
+        session.quit()
+    else:
+        print(f"File '{local_filename}' already exists. Skipping download.")
 
     # use pandas to read the csv file. 
     df = pd.read_csv(local_filename)
