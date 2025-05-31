@@ -73,9 +73,15 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     #### copy across single day climatological file ####
     # create a local filename ###
     if local_destination == None:
-        local_filename = f'{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        if variable == 'tas' or variable == 'mslp':
+            local_filename = f'{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        elif variable == 'pr':
+            local_filename = f'{variable}_20yrCLIM_WEEKLYSUM_quintiles_{date}.nc'
     else:
-        local_filename = f'{local_destination}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        if variable == 'tas' or variable == 'mslp':
+            local_filename = f'{local_destination}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        elif variable == 'pr':
+            local_filename = f'{local_destination}/{variable}_20yrCLIM_WEEKLYSUM_quintiles_{date}.nc'
 
     if not os.path.exists(local_filename):
         session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) 
