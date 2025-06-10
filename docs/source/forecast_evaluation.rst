@@ -90,7 +90,7 @@ The **retrieve_20yr_quintile_boundaries** function returns a dataset containing 
 
 .. important::  
    
-   Climatological quintile boundaries are only avaliable for every Monday from 1999 to present. 
+   Climatological quintile boundaries are only avaliable for every Monday from 11th January 1999 to present. 
 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -266,11 +266,11 @@ Once the forecast initialization dates are retrieved, the period-aggregated scor
        obs_pbs = forecast_evaluation.conditional_obs_probs(obs,quintile_clim)
 
        # work out RPSs
-       RPS_fc = forecast_evaluation.calculate_RPS(submitted_forecast,obs_pbs,variable,land_sea_mask,weighted_only=True) # work out RPS for forecast but keep full 2D grid with weights included (weighted_only=True).
+       RPS_fc = forecast_evaluation.calculate_RPS(submitted_forecast,obs_pbs,variable,land_sea_mask,lat_weighting=True,global_mean=False) # work out RPS for forecast but keep full 2D grid with weights included.
        # work out RPS_clim. # create a climatological xarray with all values equal to 0.2
        num_quants = submitted_forecast.shape[0]
        clim_pbs = obs_pbs.where(False,1.0/num_quants)
-       RPS_clim = forecast_evaluation.calculate_RPS(clim_pbs,obs_pbs,variable,land_sea_mask,weighted_only=True)
+       RPS_clim = forecast_evaluation.calculate_RPS(clim_pbs,obs_pbs,variable,land_sea_mask,lat_weighting=True,global_mean=False)
 
        all_fc_RPS.append(RPS_fc) # for each initialisation date, append the two arrays
        all_clim_RPS.append(RPS_clim)
