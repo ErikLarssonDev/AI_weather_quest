@@ -9,6 +9,7 @@ import re
 import xarray as xr
 import numpy as np
 import pandas as pd
+import os
 
 def all_plot_choices(ax,i):
     ax.add_feature(feature.BORDERS,facecolor='none',edgecolor='black',linewidth=0.5)
@@ -118,6 +119,7 @@ def plot_forecast(forecast,quintile_num,local_destination=None):
     fig_title, sve_nme = get_forecast_attributes(single_quin)
 
     if local_destination:
+        os.makedirs(local_destination, exist_ok=True)
         sve_nme = f'{local_destination}{sve_nme}'
 
     fig, ax = plt.subplots(1,1,figsize=[6.4,4.5],gridspec_kw=dict(hspace=0.0),subplot_kw=dict(projection=ccrs.PlateCarree()))
