@@ -43,10 +43,10 @@ def create_colormap():
 
     colors = [      '#2a2a2a',
                     '#36454F',
-                    'grey',
-                    'silver',
+                    'slategray',
+                    'darkgray',
                     'gainsboro',
-                    'white',
+                    'lightgrey',
                     'mediumaquamarine',
                     'lightseagreen',
                     'cadetblue',
@@ -134,6 +134,7 @@ def plot_forecast(forecast,quintile_num,local_destination=None):
 
     CB = plt.colorbar(CF,cax=cbar_ax,orientation='horizontal',pad=0.25,ticks=levels)
     CB.set_label('%')
-    plt.savefig(sve_nme,dpi=200.0)
-    plt.close()
+    if local_destination:
+        plt.savefig(sve_nme,dpi=200.0)
+        plt.close()
 

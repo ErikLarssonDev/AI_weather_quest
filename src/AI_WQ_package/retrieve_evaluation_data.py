@@ -45,7 +45,7 @@ def retrieve_land_sea_mask(password,local_destination=None):
 
     # open file using xarray.
     # when opening, drop the time coordinate from the xarray.
-    land_sea_mask = xr.open_dataarray(local_filename).squeeze().reset_coords('time',drop=True)
+    land_sea_mask = xr.open_dataarray(local_filename).squeeze()#.reset_coords('time',drop=True)
     #land_sea_mask = change_lat_long_coord_names(land_sea_mask)
     # return the single day climatology.
     return land_sea_mask
