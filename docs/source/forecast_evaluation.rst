@@ -90,7 +90,7 @@ The **retrieve_20yr_quintile_boundaries** function returns a dataset containing 
 
 .. important::  
    
-   Climatological quintile boundaries are only avaliable for every Monday from 11th January 1999 to present. 
+   Climatological quintile boundaries are available at a daily resolution from 11th January 1999 to present day plus eight months. 
 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,7 +116,7 @@ This dataset is used to mask oceanic grid points when evaluating temperature and
    
    Land fraction values are not used when evaluating forecasts of mean sea level pressure. 
 
-Example: Retrieving Requried Datasets
+Example: Retrieving Required Datasets
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -177,7 +177,7 @@ The **work_out_RPSS** function executes the following tasks:
 - Computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
 - Calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities.
 - Determines the RPSS with respect to climatology. 
-- Applies a land-sea mask when the variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 80%.
+- Applies a land-sea mask when the variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 50%.
 - Computes the area-weighted RPSS.
 
 .. important::  

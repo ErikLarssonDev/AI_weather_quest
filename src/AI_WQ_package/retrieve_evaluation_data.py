@@ -60,7 +60,7 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     # get a data obj
     date_obj = datetime.strptime(date,'%Y%m%d')
     # check that the date obj is a Monday and if not, check that the user wants the previous Monday's data
-    date_obj = get_previous_monday(date_obj)
+    #date_obj = get_previous_monday(date_obj) # no longer need to check whether it is a Monday. Daily quintile climatologies are uploaded!
     date = datetime.strftime(date_obj,'%Y%m%d') # reload date in case it has changed
 
     # get the year component
@@ -69,6 +69,11 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
 
     # check variable is valid
     check_fc_submission.check_variable_in_list(variable,['tas','mslp','pr'])
+
+    if variable == 'tas' or variable == 'mslp':
+        weekly_agg_str = 'WEEKLYMEAN'
+    elif variable == 'pr':
+        weekly_agg_str = 'WEEKLYSUM'
 
     #### copy across single day climatological file ####
     # create a local filename ###
