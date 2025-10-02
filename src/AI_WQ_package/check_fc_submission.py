@@ -222,8 +222,12 @@ def check_data_characteristics(da):
         raise ValueError(f"DataArray shape is {da.shape}, but expected {expected_shape}.")
 
     # check all probabilities equal 1.0 when summing across axis.
-    summed_values = da.sum(axis=0)
-    if not np.allclose(summed_values,1.0,atol=0.2):
+    summed_values = da.sum(axis=0, skipna=False)
+    
+    summed_values = summed_values.values
+
+    mask = ~np.isnan(summed_values)
+    if not np.allclose(summed_values[mask], 1.0, atol=0.2):
         raise ValueError("Values do not sum to 1.0 along the first axis.")
 
 def is_valid_date(input_str):
